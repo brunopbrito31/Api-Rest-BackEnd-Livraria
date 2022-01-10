@@ -60,16 +60,18 @@ public class CategoryController {
 
     @PostMapping("/{id}")
     public ResponseEntity<Product> insertProductInCategory(@PathVariable Long id, @RequestBody Product product){
+
         Optional<Category> categorySearched = categoryService.getCategoryById(id);
-        Optional<Product> productSearched = productService.getProductById(id);
+
+        if(product.getId() != null){
+            Optional<Product> productSearched = productService.getProductById(product.getId());
+            product = productSearched.get();
+        }
+
         if(!categorySearched.isPresent()){
             return ResponseEntity.badRequest().build();
         }
 
-        if(productSearched.isPresent()){
-            product = productSearched.get();
-        }
-        
         product.setCategory(categorySearched.get());
         product = productService.saveProduct(product);
 
