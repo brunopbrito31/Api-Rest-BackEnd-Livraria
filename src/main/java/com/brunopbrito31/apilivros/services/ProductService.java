@@ -27,6 +27,11 @@ public class ProductService {
         return productSearched;
     }
 
+    public Optional<Product> getProductByBarcode(String barcode){
+        Optional<Product> productSearched = productRepository.getProductByBarcode(barcode);
+        return productSearched;
+    }
+
     public Product saveProduct (Product product){
         product = productRepository.save(product);
         return product;
