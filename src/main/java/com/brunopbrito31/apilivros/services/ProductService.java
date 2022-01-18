@@ -32,6 +32,11 @@ public class ProductService {
         return productSearched;
     }
 
+    public List<Product> getProductByTitle(String title){
+        List<Product> productsSearched = productRepository.getProductByName(title);
+        return productsSearched;
+    }
+
     public Product saveProduct (Product product){
         product = productRepository.save(product);
         return product;
