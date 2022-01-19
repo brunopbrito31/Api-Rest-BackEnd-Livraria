@@ -1,13 +1,19 @@
 package com.brunopbrito31.apilivros.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.brunopbrito31.apilivros.models.entities.Category;
 import com.brunopbrito31.apilivros.models.entities.Product;
+import com.brunopbrito31.apilivros.repositories.ProductPageableRepository;
 import com.brunopbrito31.apilivros.repositories.ProductRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -17,9 +23,24 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private ProductPageableRepository repository;
+
     public List<Product> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products;
+    }
+
+    public List<Product> getAllProductsPageable(Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize,Sort.by(sortBy));
+
+        Page<Product> pagedResult = repository.findAll(paging);
+
+        if(pagedResult.hasContent()){
+            return pagedResult.getContent();
+        }else{
+            return new ArrayList<Product>();
+        }
     }
 
     public Optional<Product> getProductById(Long id){
@@ -46,6 +67,10 @@ public class ProductService {
         product.setCategory(category);
         product = productRepository.save(product);
         return product;
+    }
+
+    public Integer getTotalProducts(){
+        return productRepository.getTotalProducts();
     }
     
 }
