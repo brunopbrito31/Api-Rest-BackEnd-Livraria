@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.brunopbrito31.apilivros.models.entities.Product;
-import com.brunopbrito31.apilivros.repositories.ProductPageableRepository;
 import com.brunopbrito31.apilivros.services.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
