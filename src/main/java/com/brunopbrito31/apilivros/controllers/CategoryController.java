@@ -33,19 +33,17 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<List<Category>> getAllCategory(){
         List<Category> categories = categoryService.getAllCategories();
-        if(categories.isEmpty()){
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok().body(categories);
+        return categories.isEmpty() ?
+            ResponseEntity.noContent().build() : 
+            ResponseEntity.ok().body(categories);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable Long id){
         Optional<Category> category = categoryService.getCategoryById(id);
-        if(!category.isPresent()){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(category.get());
+        return category.isPresent() ? 
+            ResponseEntity.ok().body(category.get()) : 
+            ResponseEntity.notFound().build();
     }
 
     @PostMapping()
@@ -59,8 +57,10 @@ public class CategoryController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Product> insertProductInCategory(@PathVariable Long id, @RequestBody Product product){
-
+    public ResponseEntity<Product> insertProductInCategory(
+        @PathVariable Long id, 
+        @RequestBody Product product
+    ){
         Optional<Category> categorySearched = categoryService.getCategoryById(id);
 
         if(product.getId() != null){
@@ -82,7 +82,10 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category category){
+    public ResponseEntity<Category> updateCategory(
+        @PathVariable Long id, 
+        @RequestBody Category category
+    ){
         Optional<Category> categorySearched = categoryService.getCategoryById(id);
         if(!categorySearched.isPresent()){
             return ResponseEntity.badRequest().build();

@@ -28,19 +28,17 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<User>> getAll(){
         List<User> users = userService.getAllusers();
-        if(users.isEmpty()){
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok().body(users);
+        return users.isEmpty() ? 
+            ResponseEntity.noContent().build() : 
+            ResponseEntity.ok().body(users);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getByID(@PathVariable Long id){
         Optional<User> searschedUser = userService.getuserById(id);
-        if(!searschedUser.isPresent()){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(searschedUser.get());
+        return searschedUser.isPresent() ? 
+            ResponseEntity.ok().body(searschedUser.get()) : 
+            ResponseEntity.notFound().build();
     }
 
     @PostMapping

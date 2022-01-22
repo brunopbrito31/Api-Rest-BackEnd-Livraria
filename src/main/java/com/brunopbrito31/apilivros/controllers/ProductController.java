@@ -50,22 +50,22 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id){
         Optional<Product> productSearched = productService.getProductById(id);
-        if(!productSearched.isPresent()){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(productSearched.get());
+        return productSearched.isPresent() ? 
+            ResponseEntity.ok().body(productSearched.get()) : 
+            ResponseEntity.notFound().build();
     }
 
     @GetMapping("/description")
-    public List<Product> getProductByDescription(@RequestParam String description){
+    public ResponseEntity<List<Product>> getProductByDescription(@RequestParam String description){
         List<Product> productSearched = productService.getProductByTitle(description);
-        return productSearched;
+        return productSearched.isEmpty() ? 
+            ResponseEntity.noContent().build() : 
+            ResponseEntity.ok().body(productSearched);
     }
 
     @GetMapping("/total")
     public Integer getTotalProduct(){
-        Integer total = productService.getTotalProducts();
-        return total;
+        return productService.getTotalProducts();
     }
 
     @PostMapping

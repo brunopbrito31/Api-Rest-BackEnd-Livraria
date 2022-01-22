@@ -23,8 +23,8 @@ public class UploadController {
         byte[] bytes = file.getBytes();
         Path path = Paths.get(DIR_TO_UPLOAD+file.getOriginalFilename());
         Files.write(path, bytes);
-
-        return "File, bytes";
+        
+        return "File: "+file.getOriginalFilename()+", bytes";
     }
     
 }

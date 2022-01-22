@@ -27,29 +27,36 @@ public class StockItemController {
     @GetMapping
     public ResponseEntity<List<StockItem>> getAll(){
         List<StockItem> items = stockItemService.getStockItems();
-        if(items.isEmpty()){
-            return ResponseEntity.noContent().build();
-        }else{
-            return ResponseEntity.ok().body(items);
-        }
+        return items.isEmpty() ?
+            ResponseEntity.noContent().build() :  
+            ResponseEntity.ok().body(items);
     }
 
     @PostMapping
-    public ResponseEntity<StockItem> createStock (@RequestParam("idproduct") Long idProduct){
+    public ResponseEntity<StockItem> createStock (
+        @RequestParam("idproduct") Long idProduct
+    ){
         StockItem createdStock  = stockItemService.createStockItem(idProduct);
+
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
                 .buildAndExpand(createdStock.getId()).toUri();
         return ResponseEntity.created(uri).body(createdStock);  
     }
 
     @PutMapping("/add")
-    public ResponseEntity<StockItem> addItemStock ( @RequestParam("idproduct") Long idProduct, @RequestParam("quantity")BigDecimal quantity ){
+    public ResponseEntity<StockItem> addItemStock ( 
+        @RequestParam("idproduct") Long idProduct, 
+        @RequestParam("quantity")BigDecimal quantity 
+    ){
         StockItem oldStock  = stockItemService.addProductInStockItem(idProduct, quantity);
         return ResponseEntity.ok().body(oldStock);
     }
 
     @PutMapping("/rem")
-    public ResponseEntity<StockItem> removeItemStock ( @RequestParam("idproduct") Long idProduct, @RequestParam("quantity") BigDecimal quantity){
+    public ResponseEntity<StockItem> removeItemStock ( 
+        @RequestParam("idproduct") Long idProduct,
+        @RequestParam("quantity") BigDecimal quantity
+    ){
         StockItem oldStock = stockItemService.removeProductInStockItem(idProduct, quantity);
         return ResponseEntity.ok().body(oldStock);
     }

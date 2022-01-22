@@ -33,14 +33,11 @@ public class ProductService {
 
     public List<Product> getAllProductsPageable(Integer pageNo, Integer pageSize, String sortBy) {
         Pageable paging = PageRequest.of(pageNo, pageSize,Sort.by(sortBy));
-
         Page<Product> pagedResult = repository.findAll(paging);
 
-        if(pagedResult.hasContent()){
-            return pagedResult.getContent();
-        }else{
-            return new ArrayList<Product>();
-        }
+        return pagedResult.hasContent() ? 
+            pagedResult.getContent() : 
+            new ArrayList<Product>();          
     }
 
     public Optional<Product> getProductById(Long id){
