@@ -56,6 +56,7 @@ public class Sale {
         
         if(this.status.equals(SaleStatus.STARTED)){
             this.status = SaleStatus.INPROGRESS;
+
         }else if (!this.status.equals(SaleStatus.INPROGRESS)){
             throw new IllegalArgumentException("Sale is not start");
         }

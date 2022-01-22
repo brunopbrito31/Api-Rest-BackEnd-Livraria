@@ -31,8 +31,16 @@ public class ProductService {
         return products;
     }
 
-    public List<Product> getAllProductsPageable(Integer pageNo, Integer pageSize, String sortBy) {
-        Pageable paging = PageRequest.of(pageNo, pageSize,Sort.by(sortBy));
+    public List<Product> getAllProductsPageable(
+        Integer pageNo,
+        Integer pageSize,
+        String sortBy
+    ) {
+        Pageable paging = PageRequest.of(
+            pageNo, 
+            pageSize,
+            Sort.by(sortBy
+        ));
         Page<Product> pagedResult = repository.findAll(paging);
 
         return pagedResult.hasContent() ? 
