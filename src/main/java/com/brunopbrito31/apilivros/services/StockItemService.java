@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.brunopbrito31.apilivros.models.entities.Product;
 import com.brunopbrito31.apilivros.models.entities.StockItem;
+import com.brunopbrito31.apilivros.models.tools.Auxiliar;
 import com.brunopbrito31.apilivros.repositories.ProductRepository;
 import com.brunopbrito31.apilivros.repositories.StockItemRepository;
 
@@ -85,7 +86,7 @@ public class StockItemService {
     }
 
     public StockItem addProductInStockItem( Long idProduct, BigDecimal quantity ) {
-        validatePositiveNumber(quantity);
+        Auxiliar.verifyPositiveNumberIntegrity(quantity);
         Product searchedProduct = getProductByIdWithFilter(idProduct);
 
         Optional<StockItem> searchedStockItem = stockItemRepository.getStockItemByProduct(searchedProduct);
@@ -105,7 +106,7 @@ public class StockItemService {
     }
 
     public StockItem removeProductInStockItem( Long idProduct, BigDecimal quantity ) {
-        validatePositiveNumber(quantity);
+        Auxiliar.verifyPositiveNumberIntegrity(quantity);
         Product searchedProduct = getProductByIdWithFilter(idProduct);
         Optional<StockItem> searchedStockItem = stockItemRepository.getStockItemByProduct(searchedProduct);
 
@@ -139,11 +140,5 @@ public class StockItemService {
             throw new IllegalArgumentException("Stock Invalid");
         }
         return searchedStockItem.get();
-    }
-
-    private void validatePositiveNumber(BigDecimal value){
-        if(value.compareTo(BigDecimal.valueOf(0)) <= 0){
-            throw new IllegalArgumentException("Quantity Invalid");
-        }
     }
 }

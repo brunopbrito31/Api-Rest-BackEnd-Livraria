@@ -45,5 +45,10 @@ public class SaleItem {
     @ManyToOne
     @JoinColumn(name = "sale_id")
     private Sale fatherSale;
+
+    public void updateQuantity(BigDecimal quantity) {
+        this.quantity.add(quantity);
+        this.totalPrice = this.totalPrice.add(this.unitPrice.multiply(quantity));
+    }
     
 }
