@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.brunopbrito31.apilivros.models.enums.Operation;
 import com.brunopbrito31.apilivros.models.enums.SaleStatus;
 import com.brunopbrito31.apilivros.models.tools.Auxiliar;
 
@@ -59,7 +60,7 @@ public class Sale {
             throw new IllegalArgumentException("Sale is not start");
         }
 
-        if(!insertInOldSaleItem(item)){
+        if(!updateOldSaleItem(item, Operation.ADD)){
             this.saleItems.add(item);
         }
     }
@@ -68,11 +69,15 @@ public class Sale {
         Auxiliar.verifyPositiveNumberIntegrity(item.getQuantity());
 
         if(!this.status.equals(SaleStatus.INPROGRESS)){
-            
+            throw new IllegalArgumentException("No have a sale/product");
+        }
+
+        if(!updateOldSaleItem(item, Operation.REM)){
+            throw new IllegalArgumentException("product not exists in sale");
         }
     }
 
-    private Boolean insertInOldSaleItem(SaleItem item){
+    private Boolean updateOldSaleItem(SaleItem item, Operation operation){
         // Verify if product exists in sale
         Stream<SaleItem> saleItemFilter = this.saleItems.stream()
                                         .filter(x -> x.getProduct().getId().equals(item.getProduct().getId()));
@@ -80,9 +85,18 @@ public class Sale {
         List<SaleItem> saleItensWithFilter = saleItemFilter.collect(Collectors.toList());
 
         if(!saleItensWithFilter.isEmpty()){
-            saleItemFilter.forEach(x -> x.updateQuantity(item.getQuantity()));
+            saleItemFilter.forEach(x -> x.updateQuantity(item.getQuantity(),Operation.ADD));
+
+            if(operation.equals(Operation.REM)){
+                cleanNounsListItens();
+            }
             return true;
         }
         return false;
+    }
+
+    // Excludes null itens from list
+    private void cleanNounsListItens() {
+        this.saleItems.removeIf(x -> x.getQuantity().equals(BigDecimal.valueOf(0)));
     }
 }

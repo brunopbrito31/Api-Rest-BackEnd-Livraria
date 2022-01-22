@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import com.brunopbrito31.apilivros.models.enums.Operation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -46,9 +47,17 @@ public class SaleItem {
     @JoinColumn(name = "sale_id")
     private Sale fatherSale;
 
-    public void updateQuantity(BigDecimal quantity) {
+    public void updateQuantity(BigDecimal quantity, Operation operation) {
+        if (operation.equals(Operation.REM)){
+            if( quantity.compareTo(this.getQuantity()) > 0){
+                throw new IllegalArgumentException("No have a quantity of products");
+            }
+            quantity = quantity.multiply(BigDecimal.valueOf(-1));
+        }else if (!operation.equals(Operation.ADD)){
+            throw new IllegalArgumentException("Invalid Operation");
+        }
         this.quantity.add(quantity);
-        this.totalPrice = this.totalPrice.add(this.unitPrice.multiply(quantity));
+        this.totalPrice = this.unitPrice.multiply(this.quantity);
     }
     
 }
