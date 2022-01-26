@@ -1,6 +1,8 @@
 package com.brunopbrito31.apilivros.models.entities;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,23 +39,38 @@ public class Sale {
 
     private Date date;
 
+    private Date expiration;
+
     @OneToMany(mappedBy = "fatherSale", fetch = FetchType.LAZY)
     private List<SaleItem> saleItems;
 
     private BigDecimal total;
 
+    private Long idUser;
+
     @Enumerated(EnumType.STRING)
     private SaleStatus status;
 
-    public static Sale startSale() {
+
+    // Ok - Done
+    public static Sale startSale(Long idClient) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(Date.from(Instant.now()));
+        cal.add(Calendar.DAY_OF_MONTH,2);
+
         Sale newSale = new Sale();
-        newSale.status = SaleStatus.STARTED;
+        newSale.setDate(Date.from(Instant.now()));
+        newSale.setExpiration(cal.getTime());
+        newSale.setStatus(SaleStatus.STARTED);
+        if(idClient != 0){
+            newSale.setId(idClient);
+        }
         return newSale;
     }
 
     public void addItem(SaleItem item) {
         Auxiliar.verifyPositiveNonNullNumberIntegrity(item.getQuantity());
-        
+    
         if(this.status.equals(SaleStatus.STARTED)){
             this.status = SaleStatus.INPROGRESS;
 

@@ -40,8 +40,8 @@ public class ProductController {
     public ResponseEntity<List<Product>> getProductsWithPagination(
         @RequestParam(defaultValue = "0") Integer pageNo,
         @RequestParam(defaultValue = "10") Integer pageSize,
-        @RequestParam(defaultValue = "id") String sortBy)
-    {
+        @RequestParam(defaultValue = "id") String sortBy
+    ){
         List<Product> list = productService.getAllProductsPageable(pageNo, pageSize, sortBy);
 
         return new ResponseEntity<List<Product>>(list, new HttpHeaders(), HttpStatus.OK);
